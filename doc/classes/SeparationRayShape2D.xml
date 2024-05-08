@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<class name="SeparationRayShape2D" inherits="Shape2D" version="4.0">
+<class name="SeparationRayShape2D" inherits="Shape2D" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../class.xsd">
 	<brief_description>
-		Separation ray shape for 2D collisions.
+		A 2D ray shape used for physics collision that tries to separate itself from any collider.
 	</brief_description>
 	<description>
-		Separation ray shape for 2D collisions. A ray is not really a collision body; instead, it tries to separate itself from whatever is touching its far endpoint. It's often useful for characters.
+		A 2D ray shape, intended for use in physics. Usually used to provide a shape for a [CollisionShape2D]. When a [SeparationRayShape2D] collides with an object, it tries to separate itself from it by moving its endpoint to the collision point. For example, a [SeparationRayShape2D] next to a character can allow it to instantly move up when touching stairs.
 	</description>
 	<tutorials>
 	</tutorials>
-	<methods>
-	</methods>
 	<members>
 		<member name="length" type="float" setter="set_length" getter="get_length" default="20.0">
 			The ray's length.
@@ -19,6 +17,4 @@
 			If [code]true[/code], the shape can return the correct normal and separate in any direction, allowing sliding motion on slopes.
 		</member>
 	</members>
-	<constants>
-	</constants>
 </class>

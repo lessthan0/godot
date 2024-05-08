@@ -1,22 +1,17 @@
-"""Functions used to generate source files during build time
+"""Functions used to generate source files during build time"""
 
-All such functions are invoked in a subprocess on Windows to prevent build flakiness.
-
-"""
 import os
-from platform_methods import subprocess_main
+from detect import get_mingw_tool
 
 
 def make_debug_mingw(target, source, env):
-    mingw_prefix = ""
-    if env["bits"] == "32":
-        mingw_prefix = env["mingw_prefix_32"]
-    else:
-        mingw_prefix = env["mingw_prefix_64"]
-    os.system(mingw_prefix + "objcopy --only-keep-debug {0} {0}.debugsymbols".format(target[0]))
-    os.system(mingw_prefix + "strip --strip-debug --strip-unneeded {0}".format(target[0]))
-    os.system(mingw_prefix + "objcopy --add-gnu-debuglink={0}.debugsymbols {0}".format(target[0]))
+    objcopy = get_mingw_tool("objcopy", env["mingw_prefix"], env["arch"])
+    strip = get_mingw_tool("strip", env["mingw_prefix"], env["arch"])
 
+    if not objcopy or not strip:
+        print('`separate_debug_symbols` requires both "objcopy" and "strip" to function.')
+        return
 
-if __name__ == "__main__":
-    subprocess_main(globals())
+    os.system("{0} --only-keep-debug {1} {1}.debugsymbols".format(objcopy, target[0]))
+    os.system("{0} --strip-debug --strip-unneeded {1}".format(strip, target[0]))
+    os.system("{0} --add-gnu-debuglink={1}.debugsymbols {1}".format(objcopy, target[0]))
